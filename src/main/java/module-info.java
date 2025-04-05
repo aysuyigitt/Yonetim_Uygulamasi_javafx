@@ -1,4 +1,24 @@
-module com.aysuyigit.yonetim_uygulaması_javafx {
+module com.aysuyigit.yonetim_uygulamasi_javafx {
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires static lombok;
+    //requires javafx.web;
+
+    requires org.controlsfx.controls;
+    requires com.dlsc.formsfx;
+    requires net.synedra.validatorfx;
+    requires org.kordamp.ikonli.javafx;
+    requires org.kordamp.bootstrapfx.core;
+    requires jdk.jdi;
+    //requires eu.hansolo.tilesfx;
+
+    opens com.aysuyigit.yonetim_uygulamasi_javafx to javafx.fxml;
+    exports com.aysuyigit.yonetim_uygulamasi_javafx;
+}
+
+
+
+/*module com.aysuyigit.yonetim_uygulaması_javafx {
 
     // JavaFX'in temel bileşenlerini kullanmak için gerekli modüller
     // JavaFX kontrol bileşenlerini (Button, Label, TextField vb.) kullanabilmek için gereklidir.
@@ -75,24 +95,6 @@ module com.aysuyigit.yonetim_uygulaması_javafx {
     exports com.aysuyigit.yonetim_uygulaması_javafx;
 
     opens com.aysuyigit.yonetim_uygulaması_javafx.utils to javafx.base, lombok;
-}
-
-
-
-
-
-/*module com.aysuyigit.yonetim_uygulamasi_javafx {
-    requires javafx.controls;
-    requires javafx.fxml;
-    //requires javafx.web;
-
-    requires org.controlsfx.controls;
-    requires com.dlsc.formsfx;
-    requires net.synedra.validatorfx;
-    requires org.kordamp.ikonli.javafx;
-    requires org.kordamp.bootstrapfx.core;
-    //requires eu.hansolo.tilesfx;
-
-    opens com.aysuyigit.yonetim_uygulamasi_javafx to javafx.fxml;
-    exports com.aysuyigit.yonetim_uygulamasi_javafx;
 }*/
+
+
