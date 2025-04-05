@@ -1,6 +1,8 @@
 package com.aysuyigit.yonetim_uygulamasi_javafx.dao;
 
 
+import com.aysuyigit.yonetim_uygulamasi_javafx.database.SingletonDBConnection;
+
 import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +29,7 @@ public interface IDaoImplements <T> {
 
 
     default Connection iDaoImplementsDatabaseConnection() {
-         return null;
+         return SingletonDBConnection.getInstance().getConnection();
     }
 
 }

@@ -2,6 +2,7 @@ module com.aysuyigit.yonetim_uygulamasi_javafx {
     requires javafx.controls;
     requires javafx.fxml;
     requires static lombok;
+    requires java.sql;
     //requires javafx.web;
 
     requires org.controlsfx.controls;
