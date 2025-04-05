@@ -1,61 +1,63 @@
 module com.aysuyigit.yonetim_uygulamasi_javafx {
-    requires javafx.controls;
-    requires javafx.fxml;
-    requires static lombok;
-    requires java.sql;
-    //requires javafx.web;
-
-    requires org.controlsfx.controls;
-    requires com.dlsc.formsfx;
-    requires net.synedra.validatorfx;
-    requires org.kordamp.ikonli.javafx;
-    requires org.kordamp.bootstrapfx.core;
-    requires jdk.jdi;
-    //requires eu.hansolo.tilesfx;
-
-    opens com.aysuyigit.yonetim_uygulamasi_javafx to javafx.fxml;
-    exports com.aysuyigit.yonetim_uygulamasi_javafx;
-}
-
-
-
-/*module com.aysuyigit.yonetim_uygulaması_javafx {
 
     // JavaFX'in temel bileşenlerini kullanmak için gerekli modüller
     // JavaFX kontrol bileşenlerini (Button, Label, TextField vb.) kullanabilmek için gereklidir.
     requires javafx.controls;
-
     // JavaFX FXML dosyalarını (FXML UI tasarımları) yükleyebilmek için gereklidir.
     requires javafx.fxml;
-
-    // WEB
-    //requires javafx.web;
-
-    // #######################################################################################
-    // UI geliştirme için kullanılan harici kütüphaneler
-    // ControlsFX, gelişmiş UI bileşenlerini (örn: Notifikasyonlar, Doğrulama Alanları) sağlar.
-    requires org.controlsfx.controls;
-
-    // FormsFX, formlar için gelişmiş bileşenler sunan bir kütüphanedir.
-    requires com.dlsc.formsfx;
-
-    // ValidatorFX, form doğrulama işlemleri için kullanılır.
-    requires net.synedra.validatorfx;
-
-    // İkon kütüphanesi, UI'de çeşitli ikonları kullanmaya olanak tanır.
-    requires org.kordamp.ikonli.javafx;
-
-    // BootstrapFX, Bootstrap benzeri CSS stillerini JavaFX'e entegre eder.
-    requires org.kordamp.bootstrapfx.core;
-
-    // #############################################
     // Lombok kütüphanesi, Java'da getter, setter, constructor gibi metotları otomatik oluşturur.
     // Lombok, derleme zamanı (compile-time) kullanıldığı için "static" olarak eklenmiştir.
     requires static lombok;
-
     // JDBC ile veritabanı bağlantısı kurabilmek için gerekli modül
     // Java'daki SQL işlemlerini (Connection, Statement, ResultSet vb.) gerçekleştirebilmek için gereklidir.
     requires java.sql;
+    //requires javafx.web;
+
+    // UI geliştirme için kullanılan harici kütüphaneler
+    // ControlsFX, gelişmiş UI bileşenlerini (örn: Notifikasyonlar, Doğrulama Alanları) sağlar.
+    requires org.controlsfx.controls;
+    // FormsFX, formlar için gelişmiş bileşenler sunan bir kütüphanedir.
+    requires com.dlsc.formsfx;
+    // ValidatorFX, form doğrulama işlemleri için kullanılır.
+    requires net.synedra.validatorfx;
+    // İkon kütüphanesi, UI'de çeşitli ikonları kullanmaya olanak tanır.
+    requires org.kordamp.ikonli.javafx;
+    // BootstrapFX, Bootstrap benzeri CSS stillerini JavaFX'e entegre eder.
+    requires org.kordamp.bootstrapfx.core;
+    requires jdk.jdi;
+    //requires eu.hansolo.tilesfx;
+
+    // Paket Erişimlerine İzin vermek
+    // `opens` ifadesi, bir paketin runtime'da (çalışma zamanında) refleksiyon (reflection) kullanılarak erişilebilir olmasını sağlar.
+    // Ana paket (Root package) açılıyor, böylece FXML dosyalarından erişilebilir.
+    opens com.aysuyigit.yonetim_uygulamasi_javafx to javafx.fxml;
+
+    // Paket dışa aktarmak
+    // `exports` ifadesi, paketin diğer modüller tarafından erişilebilir olmasını sağlar.
+    // Ana paketi dış dünyaya açıyoruz. Diğer modüller bu paketin içeriğini kullanabilir.
+    exports com.aysuyigit.yonetim_uygulamasi_javafx;
+
+    // DTO (Data Transfer Object) paketinin içeriği, JavaFX bileşenleri ve Lombok tarafından erişilebilir olmalıdır.
+    opens com.aysuyigit.yonetim_uygulamasi_javafx.dto to javafx.base, lombok;
+
+
+}
+
+
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
     //requires com.h2database;
     //requires jbcrypt;
     //requires org.apache.poi.ooxml;
@@ -64,14 +66,8 @@ module com.aysuyigit.yonetim_uygulamasi_javafx {
     //requires java.mail;
     //requires eu.hansolo.tilesfx;
 
-    // #######################################################################################
-    // Paket Erişimlerine İzin vermek
-    // `opens` ifadesi, bir paketin runtime'da (çalışma zamanında) refleksiyon (reflection) kullanılarak erişilebilir olmasını sağlar.
-    // Ana paket (Root package) açılıyor, böylece FXML dosyalarından erişilebilir.
-    opens com.aysuyigit.yonetim_uygulaması_javafx to javafx.fxml;
 
-    // DTO (Data Transfer Object) paketinin içeriği, JavaFX bileşenleri ve Lombok tarafından erişilebilir olmalıdır.
-    opens com.aysuyigit.yonetim_uygulaması_javafx.dto to javafx.base, lombok;
+
 
     // Controller sınıfları FXML tarafından kullanılacağı için açılması gerekiyor.
     opens com.aysuyigit.yonetim_uygulaması_javafx.controller to javafx.fxml;
@@ -82,9 +78,7 @@ module com.aysuyigit.yonetim_uygulamasi_javafx {
     // Veritabanı bağlantısı sağlayan sınıfların da SQL modülüne açık olması gerekiyor.
     opens com.aysuyigit.yonetim_uygulaması_javafx.database to java.sql;
 
-    // #####################################################################
-    // Paket dışa aktarmak
-    // `exports` ifadesi, paketin diğer modüller tarafından erişilebilir olmasını sağlar.
+
 
     // DAO sınıflarını dışarıya açıyoruz. Böylece başka modüller veritabanı işlemlerini çağırabilir.
     exports com.aysuyigit.yonetim_uygulaması_javafx.dao;
@@ -92,8 +86,6 @@ module com.aysuyigit.yonetim_uygulamasi_javafx {
     // // Veritabanı bağlantı paketini dış dünyaya açıyoruz. Diğer modüller DB bağlantısını kullanabilir.
     exports com.aysuyigit.yonetim_uygulaması_javafx.database;
 
-    // Ana paketi dış dünyaya açıyoruz. Diğer modüller bu paketin içeriğini kullanabilir.
-    exports com.aysuyigit.yonetim_uygulaması_javafx;
 
     opens com.aysuyigit.yonetim_uygulaması_javafx.utils to javafx.base, lombok;
 }*/
