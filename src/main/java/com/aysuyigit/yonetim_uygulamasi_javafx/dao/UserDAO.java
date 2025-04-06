@@ -73,7 +73,8 @@ public class UserDAO implements IDaoImplements<UserDTO> {
 
     @Override
     public Optional<UserDTO> findByName(String name) {
-        String sql = "SELECT*FROM users WHERE username=?";
+       // String sql = "SELECT*FROM users WHERE username=?";
+        String sql = "SELECT*FROM users WHERE email=?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1,name);
 
