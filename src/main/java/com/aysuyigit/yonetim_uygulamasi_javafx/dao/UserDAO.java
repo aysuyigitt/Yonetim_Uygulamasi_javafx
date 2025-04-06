@@ -158,4 +158,11 @@ public class UserDAO implements IDaoImplements<UserDTO> {
         }
         return Optional.empty();
     }
+
+    @Override
+    public Optional loginUser(String username, String password) {
+        String sql = "SELECT*FROM users WHERE username=?, AND password=?";
+        return selectSingle(sql,username,password);
+
+    }
 }

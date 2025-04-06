@@ -11,30 +11,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-public interface IDaoImplements <T> {
-
-    //CREATE
-    Optional<T> create(T t);
-
-    //List
-    Optional<List<T>>list();
-
-    //FIND
-    Optional<T> findByName(String name);
-
-    Optional<T> findById(int id);
-
-    //UPDATE
-    Optional<T> update(int id, T t);
-
-    //DELETE
-    Optional<T> delete(int id);
-
-    //Generic Method
-    T mapToObjectDTO(ResultSet resultSet) throws SQLException;
-
-    Optional<T> selectSingle(String sql, Object...params);
-
+public interface IDaoImplements <T> extends ICrud<T>, IGenericsMethod<T>, ILogin<T> {
+    //Gövdeli Method
     default Connection iDaoImplementsDatabaseConnection() {
          return SingletonDBConnection.getInstance().getConnection();
     }
