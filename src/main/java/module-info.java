@@ -25,6 +25,7 @@ module com.aysuyigit.yonetim_uygulamasi_javafx {
     // BootstrapFX, Bootstrap benzeri CSS stillerini JavaFX'e entegre eder.
     requires org.kordamp.bootstrapfx.core;
     requires jdk.jdi;
+    requires com.h2database;
     //requires eu.hansolo.tilesfx;
 
     // Paket Erişimlerine İzin vermek
