@@ -52,16 +52,40 @@
     </properties>
 
     <dependencies>
-    <!-- DATABASE -->
-    <!-- RDBMS H2DB-->
-    <!-- https://mvnrepository.com/artifact/h2db/h2db -->
-    <!-- H2 Database -->
+
+        <!--PDF-->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.29</version>
+        </dependency>
+
+
+
+        <!--EXCEL-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.3</version>
+        </dependency>
+
+        <!-- Hashing Password-->
+        <dependency>
+            <groupId>de.svenkubiak</groupId>
+            <artifactId>jBCrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+
+        <!-- DATABASE -->
+        <!-- RDBMS H2DB-->
+        <!-- https://mvnrepository.com/artifact/h2db/h2db -->
+        <!-- H2 Database -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>2.1.214</version>
         </dependency>
-
 
         <!-- JDBC Driver -->
         <dependency>
@@ -70,118 +94,118 @@
             <version>3.36.0.3</version>
         </dependency>
 
-    <!-- RDBMS MYSQL-->
-    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-    <!--
+        <!-- RDBMS MYSQL-->
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <!--
+            <dependency>
+                 <groupId>mysql</groupId>
+                 <artifactId>mysql-connector-java</artifactId>
+                 <version>8.0.28</version>
+             </dependency>
+         -->
+
+        <!-- OTHER SPECIAL LIBRARIES -->
+        <!-- JavaMail API -->
         <dependency>
-             <groupId>mysql</groupId>
-             <artifactId>mysql-connector-java</artifactId>
-             <version>8.0.28</version>
-         </dependency>
-     -->
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
 
-    <!-- OTHER SPECIAL LIBRARIES -->
-    <!-- JavaMail API -->
-    <dependency>
-        <groupId>com.sun.mail</groupId>
-        <artifactId>javax.mail</artifactId>
-        <version>1.6.2</version>
-    </dependency>
+        <!-- Apache POI: Excel -->
+        <!--excel -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.3</version>
+        </dependency>
 
-    <!-- Apache POI: Excel -->
-    <!--excel -->
-    <dependency>
-        <groupId>org.apache.poi</groupId>
-        <artifactId>poi-ooxml</artifactId>
-        <version>5.2.3</version>
-    </dependency>
+        <!--lombok-->
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>provided</scope>
+        </dependency>
 
-    <!--lombok-->
-    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-    <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>1.18.24</version>
-        <scope>provided</scope>
-    </dependency>
+        <!-- JAVA FX -->
+        <!-- javafx-controls-->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>17.0.6</version>
+        </dependency>
 
-    <!-- JAVA FX -->
-    <!-- javafx-controls-->
-    <dependency>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-controls</artifactId>
-        <version>17.0.6</version>
-    </dependency>
+        <!-- javafx-fxml-->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>17.0.6</version>
+        </dependency>
 
-    <!-- javafx-fxml-->
-    <dependency>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-fxml</artifactId>
-        <version>17.0.6</version>
-    </dependency>
+        <!-- controlsfx -->
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.2.1</version>
+        </dependency>
 
-    <!-- controlsfx -->
-    <dependency>
-        <groupId>org.controlsfx</groupId>
-        <artifactId>controlsfx</artifactId>
-        <version>11.2.1</version>
-    </dependency>
+        <!-- formsfx-core -->
+        <dependency>
+            <groupId>com.dlsc.formsfx</groupId>
+            <artifactId>formsfx-core</artifactId>
+            <version>11.6.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-    <!-- formsfx-core -->
-    <dependency>
-        <groupId>com.dlsc.formsfx</groupId>
-        <artifactId>formsfx-core</artifactId>
-        <version>11.6.0</version>
-        <exclusions>
-            <exclusion>
-                <groupId>org.openjfx</groupId>
-                <artifactId>*</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
+        <!-- validatorfx -->
+        <dependency>
+            <groupId>net.synedra</groupId>
+            <artifactId>validatorfx</artifactId>
+            <version>0.5.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-    <!-- validatorfx -->
-    <dependency>
-        <groupId>net.synedra</groupId>
-        <artifactId>validatorfx</artifactId>
-        <version>0.5.0</version>
-        <exclusions>
-            <exclusion>
-                <groupId>org.openjfx</groupId>
-                <artifactId>*</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
+        <!-- ikonli-javafx -->
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-javafx</artifactId>
+            <version>12.3.1</version>
+        </dependency>
 
-    <!-- ikonli-javafx -->
-    <dependency>
-        <groupId>org.kordamp.ikonli</groupId>
-        <artifactId>ikonli-javafx</artifactId>
-        <version>12.3.1</version>
-    </dependency>
+        <!-- bootstrapfx-core -->
+        <dependency>
+            <groupId>org.kordamp.bootstrapfx</groupId>
+            <artifactId>bootstrapfx-core</artifactId>
+            <version>0.4.0</version>
+        </dependency>
 
-    <!-- bootstrapfx-core -->
-    <dependency>
-        <groupId>org.kordamp.bootstrapfx</groupId>
-        <artifactId>bootstrapfx-core</artifactId>
-        <version>0.4.0</version>
-    </dependency>
+        <!-- junit.version -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-    <!-- junit.version -->
-    <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-    </dependency>
-
-    <!-- junit-jupiter-engine -->
-    <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-    </dependency>
+        <!-- junit-jupiter-engine -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 <build>

@@ -1,5 +1,6 @@
 package com.aysuyigit.yonetim_uygulamasi_javafx.dto;
 
+import com.aysuyigit.yonetim_uygulamasi_javafx.utils.ERole;
 import com.sun.jdi.PathSearchingVirtualMachine;
 import lombok.*;
 
@@ -16,12 +17,14 @@ public class UserDTO {
     private String username;
     private String password;
     private String email;
+    private ERole role;
 
-    public UserDTO(Integer id, String username, String password, String email) {
+    public UserDTO(Integer id, String username, String password, String email,ERole role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role=role;
 
     }
 }

@@ -26,6 +26,7 @@ module com.aysuyigit.yonetim_uygulamasi_javafx {
     requires org.kordamp.bootstrapfx.core;
     requires jdk.jdi;
     requires com.h2database;
+    requires jBCrypt;
     //requires eu.hansolo.tilesfx;
 
     // Paket Erişimlerine İzin vermek
