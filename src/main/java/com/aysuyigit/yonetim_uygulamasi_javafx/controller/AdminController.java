@@ -25,9 +25,10 @@ public class AdminController {
     private UserDAO userDAO;
 
     //Parametresiz construcutor
-    public AdminController(){
+    public AdminController() {
         userDAO = new UserDAO();
     }
+
     //Kullanıcı tablo ve sütun
     @FXML
     private TableView<UserDTO> userTable;
@@ -58,9 +59,9 @@ public class AdminController {
             @Override
             protected void updateItem(String password, boolean empty) {
                 super.updateItem(password, empty);
-                if(empty || password == null){
+                if (empty || password == null) {
                     setText(null);
-                }else{
+                } else {
                     setText("*****");
                 }
             }
@@ -115,13 +116,152 @@ public class AdminController {
 
 
     public void addUser(ActionEvent actionEvent) {
-    }
+
+        TextInputDialog usernameDialog = new TextInputDialog();
+        usernameDialog.setTitle("Yeni Kullanıcı Ekle");
+        usernameDialog.setHeaderText("Yeni Kullanıcı Ekle");
+        usernameDialog.setContentText("Kullanıcı Adı");
+
+        //Username verisi varsa
+        Optional<String> optionalUsername = usernameDialog.showAndWait();
+
+        //Text Input içine veri girilmişse
+        if (optionalUsername.isPresent()) {
+            String username = optionalUsername.get();
+
+            //Şifre için input
+            TextInputDialog passwordDialog = new TextInputDialog();
+            passwordDialog.setTitle("Yeni Kullanıcı Şifre");
+            passwordDialog.setHeaderText("Yeni Kullanıcı Şifre");
+            passwordDialog.setContentText("Kullanıcı Şifre");
+
+            //Username verisi varsa
+            Optional<String> optionalPassword = passwordDialog.showAndWait();
+
+            if (optionalPassword.isPresent()) {
+                String password = optionalPassword.get();
+
+                //Email için input
+                TextInputDialog emailDialog = new TextInputDialog();
+                passwordDialog.setTitle("Yeni Kullanıcı Email");
+                passwordDialog.setHeaderText("Yeni Kullanıcı Email");
+                passwordDialog.setContentText("Kullanıcı Email");
+
+                Optional<String> optionalEmail = emailDialog.showAndWait();
+
+                if (optionalEmail.isPresent()) {
+                    String email = optionalPassword.get();
+
+                    //Kullanıcı Ekleme
+                    Optional<UserDTO> newUser = Optional.of(new UserDTO(0, username, password, email));
+
+                    //Optional içindeki değeri almak istiyorsak
+                    newUser.ifPresent(user -> {
+                        Optional<UserDTO> createdUser = userDAO.create(user);
+                        if (createdUser.isPresent()) {
+                            showAlert("Başarılı", "Kullanıcı Başarıyla Eklendi", Alert.AlertType.INFORMATION);
+                            refreshTable();
+                        } else {
+                            showAlert("Başarısız", "Kullanıcı Eklerken Hata Alındı", Alert.AlertType.ERROR);
+                        }
+                    }); //end newUser.ifPresent
+                } //end  if(optionalEmail.isPresent())
+            } //end if(optionalPassword.isPresent())
+        } //end if(optionalUsername.isPresent())
+    } //end public void addUser(ActionEvent actionEvent)
+
 
     public void updateUser(ActionEvent actionEvent) {
+        //Seçilen kullanıcıyı güncelle
+        UserDTO selectedUser = userTable.getSelectionModel().getSelectedItem();
+        if (selectedUser != null) {
+            //Kullanıcı güncelleme
+            TextInputDialog usernameDialog = new TextInputDialog();
+            usernameDialog.setTitle("Kullanıcı Güncelle");
+            usernameDialog.setHeaderText("Kullanıcı Güncelle");
+            usernameDialog.setContentText("Kullanıcı Adı");
+
+            //Username verisi varsa
+            Optional<String> optionalUsername = usernameDialog.showAndWait();
+
+            //Text Input içine veri girilmişse
+            if (optionalUsername.isPresent()) {
+                String username = optionalUsername.get();
+
+                //Şifre için input
+                TextInputDialog passwordDialog = new TextInputDialog();
+                passwordDialog.setTitle("Güncelle Kullanıcı Şifre");
+                passwordDialog.setHeaderText("Güncelle Kullanıcı Şifre");
+                passwordDialog.setContentText("Kullanıcı Şifre");
+
+                //Username verisi varsa
+                Optional<String> optionalPassword = passwordDialog.showAndWait();
+
+                if (optionalPassword.isPresent()) {
+                    String password = optionalPassword.get();
+
+                    //Email için input
+                    TextInputDialog emailDialog = new TextInputDialog();
+                    passwordDialog.setTitle("Güncelle Kullanıcı Email");
+                    passwordDialog.setHeaderText("Güncelle Kullanıcı Email");
+                    passwordDialog.setContentText("Kullanıcı Email");
+
+                    Optional<String> optionalEmail = emailDialog.showAndWait();
+
+                    if (optionalEmail.isPresent()) {
+                        String email = optionalPassword.get();
+
+                        //Kullanıcı Ekleme
+                        Optional<UserDTO> newUser = Optional.of(new UserDTO(0, username, password, email));
+
+                        //Optional içindeki değeri almak istiyorsak
+                        newUser.ifPresent(user -> {
+                            Optional<UserDTO> createdUser = userDAO.update(selectedUser.getId(), selectedUser);
+                            if (createdUser.isPresent()) {
+                                showAlert("Başarılı", "Kullanıcı Başarıyla Güncellendi", Alert.AlertType.INFORMATION);
+                                refreshTable();
+                            } else {
+                                showAlert("Başarısız", "Kullanıcı Güncellenirken Hata Alındı", Alert.AlertType.ERROR);
+                            }
+                        }); //end newUser.ifPresent
+                    } //end  if(optionalEmail.isPresent())
+                } //end if(optionalPassword.isPresent())
+            } //end if(optionalUsern
+        } else {
+            showAlert("Uyarı", "Lütfen bir kullanıcı seçiniz", Alert.AlertType.ERROR);
+        }
     }
 
     public void deleteUser(ActionEvent actionEvent) {
+        //Seçilen kullanıcıyı sil
+        //Tıklanmış kullanıcı bilgisini almak
+        Optional<UserDTO> selectedUser = Optional.ofNullable(userTable.getSelectionModel().getSelectedItem());
+        if (selectedUser != null) {
+
+            //Onay Penceresi
+            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationAlert.setTitle("Silme Onayı");
+            confirmationAlert.setHeaderText("Kullanıcı silmek ister misiniz");
+            confirmationAlert.setContentText("Silinecek Kullanıcı" + selectedUser.get().getUsername());
+
+            //Kullanıcı Onayını Almak
+            Optional<ButtonType> isDelete = confirmationAlert.showAndWait();
+            if (isDelete.isPresent() && isDelete.get() == ButtonType.OK) {
+
+                selectedUser.ifPresent(user -> {
+                    Optional<UserDTO> deleteUser = userDAO.delete(selectedUser.get().getId());
+                    if (deleteUser.isPresent()) {
+                        showAlert("Başarılı", "Kullanıcı Başarıyla Silindi", Alert.AlertType.INFORMATION);
+                        refreshTable();
+                    } else {
+                        showAlert("Başarısız", "Kullanıcı Silinirken Hata Alındı", Alert.AlertType.ERROR);
+                    }
+                }); //end newUser.ifPresent
+            } //end  if(optionalEmail.isPres
+        }
     }
+
+
 
     public void refleshTable(ActionEvent actionEvent) {
     }
