@@ -32,13 +32,28 @@ module com.aysuyigit.yonetim_uygulamasi_javafx {
     // Ana paket (Root package) açılıyor, böylece FXML dosyalarından erişilebilir.
     opens com.aysuyigit.yonetim_uygulamasi_javafx to javafx.fxml;
 
+    // DTO (Data Transfer Object) paketinin içeriği, JavaFX bileşenleri ve Lombok tarafından erişilebilir olmalıdır.
+    opens com.aysuyigit.yonetim_uygulamasi_javafx.dto to javafx.base, lombok;
+
+    // Controller sınıfları FXML tarafından kullanılacağı için açılması gerekiyor.
+    opens com.aysuyigit.yonetim_uygulamasi_javafx.controller to javafx.fxml;
+
+    // DAO (Data Access Object) sınıfları, SQL bağlantısı kullandığı için açılıyor.
+    opens com.aysuyigit.yonetim_uygulamasi_javafx.dao to java.sql;
+
+    // Veritabanı bağlantısı sağlayan sınıfların da SQL modülüne açık olması gerekiyor.
+    opens com.aysuyigit.yonetim_uygulamasi_javafx.database to java.sql;
+
+    // DAO sınıflarını dışarıya açıyoruz. Böylece başka modüller veritabanı işlemlerini çağırabilir.
+    exports com.aysuyigit.yonetim_uygulamasi_javafx.dao;
+
+    // // Veritabanı bağlantı paketini dış dünyaya açıyoruz. Diğer modüller DB bağlantısını kullanabilir.
+    exports com.aysuyigit.yonetim_uygulamasi_javafx.database;
+
     // Paket dışa aktarmak
     // `exports` ifadesi, paketin diğer modüller tarafından erişilebilir olmasını sağlar.
     // Ana paketi dış dünyaya açıyoruz. Diğer modüller bu paketin içeriğini kullanabilir.
     exports com.aysuyigit.yonetim_uygulamasi_javafx;
-
-    // DTO (Data Transfer Object) paketinin içeriği, JavaFX bileşenleri ve Lombok tarafından erişilebilir olmalıdır.
-    opens com.aysuyigit.yonetim_uygulamasi_javafx.dto to javafx.base, lombok;
 
 
 }
@@ -46,17 +61,6 @@ module com.aysuyigit.yonetim_uygulamasi_javafx {
 
 
 /*
-
-
-
-
-
-
-
-
-
-
-
 
     //requires com.h2database;
     //requires jbcrypt;
@@ -67,27 +71,6 @@ module com.aysuyigit.yonetim_uygulamasi_javafx {
     //requires eu.hansolo.tilesfx;
 
 
-
-
-    // Controller sınıfları FXML tarafından kullanılacağı için açılması gerekiyor.
-    opens com.aysuyigit.yonetim_uygulaması_javafx.controller to javafx.fxml;
-
-    // DAO (Data Access Object) sınıfları, SQL bağlantısı kullandığı için açılıyor.
-    opens com.aysuyigit.yonetim_uygulaması_javafx.dao to java.sql;
-
-    // Veritabanı bağlantısı sağlayan sınıfların da SQL modülüne açık olması gerekiyor.
-    opens com.aysuyigit.yonetim_uygulaması_javafx.database to java.sql;
-
-
-
-    // DAO sınıflarını dışarıya açıyoruz. Böylece başka modüller veritabanı işlemlerini çağırabilir.
-    exports com.aysuyigit.yonetim_uygulaması_javafx.dao;
-
-    // // Veritabanı bağlantı paketini dış dünyaya açıyoruz. Diğer modüller DB bağlantısını kullanabilir.
-    exports com.aysuyigit.yonetim_uygulaması_javafx.database;
-
-
-    opens com.aysuyigit.yonetim_uygulaması_javafx.utils to javafx.base, lombok;
 }*/
 
 
