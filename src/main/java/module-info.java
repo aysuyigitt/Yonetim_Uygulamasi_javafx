@@ -12,6 +12,11 @@ module com.aysuyigit.yonetim_uygulamasi_javafx {
     // Java'daki SQL işlemlerini (Connection, Statement, ResultSet vb.) gerçekleştirebilmek için gereklidir.
     requires java.sql;
     //requires javafx.web;
+    requires org.apache.poi.ooxml;
+    requires org.apache.pdfbox;
+    requires java.desktop;
+    requires java.mail;
+
 
     // UI geliştirme için kullanılan harici kütüphaneler
     // ControlsFX, gelişmiş UI bileşenlerini (örn: Notifikasyonlar, Doğrulama Alanları) sağlar.

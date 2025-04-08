@@ -1,35 +1,35 @@
 package com.aysuyigit.yonetim_uygulamasi_javafx.controller;
+
 import com.aysuyigit.yonetim_uygulamasi_javafx.dao.UserDAO;
 import com.aysuyigit.yonetim_uygulamasi_javafx.dto.UserDTO;
+import com.aysuyigit.yonetim_uygulamasi_javafx.utils.ERole;
+import com.aysuyigit.yonetim_uygulamasi_javafx.utils.FXMLPath;
+import com.aysuyigit.yonetim_uygulamasi_javafx.utils.SceneHelper;
 import com.aysuyigit.yonetim_uygulamasi_javafx.utils.SpecialColor;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.stage.Stage;
-import javafx.fxml.FXML;
-import javafx.event.ActionEvent;
 import javafx.scene.Scene;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import  javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 import java.util.Optional;
 
 public class LoginController {
-    //Injection
     private UserDAO userDAO;
 
-    //Parametresiz construcutor
-    public LoginController(){
+    public LoginController() {
         userDAO = new UserDAO();
     }
 
     @FXML
-    private  TextField usernameField;
-
+    private TextField usernameField;
     @FXML
-    private  TextField passwordField;
+    private TextField passwordField;
 
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
@@ -38,55 +38,64 @@ public class LoginController {
         alert.showAndWait();
     }
 
-    //Enter tuşuna basıldığında giriş yap
     @FXML
     private void specialOnEnterPressed(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.ENTER) {
-            //Entera basıldığında login sayfasına giriş
             login();
         }
     }
 
     @FXML
-    public void login(){
-        //Kullanıcıdan giriş yaparken username,password almak
-        String username,password;
-        username = usernameField.getText();
-        password = usernameField.getText();
+    public void login() {
 
-        //UserDTO  verisini almak
-        Optional<UserDTO> optionalLoginUserDTO = userDAO.loginUser(username,password);
-        //Eğer veri boş değilse
-        if(optionalLoginUserDTO.isPresent()){
-            UserDTO userDTO = optionalLoginUserDTO.get();//veri alındı
-            //Başarılıysa ekranda göster
-            showAlert("Başarılı","Giriş başarılı",Alert.AlertType.INFORMATION);
-            //Kayıt başarılıysa Admin paneline göster
-            openAdminPane();
+        //
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText().trim();
 
-        }else{
-            //Eğer bilgiler yanlışsa
-            showAlert("Başarılı","Giriş başarılı",Alert.AlertType.ERROR);
+        Optional<UserDTO> optionalLoginUserDTO = userDAO.loginUser(username, password);
 
+        if (optionalLoginUserDTO.isPresent()) {
+            UserDTO userDTO = optionalLoginUserDTO.get();
+            showAlert("Başarılı", "Giriş Başarılı: " + userDTO.getUsername(), Alert.AlertType.INFORMATION);
+
+            if (userDTO.getRole() == ERole.ADMIN) {
+                openAdminPane();
+            } else {
+                openUserHomePane();
+            }
+
+
+        } else {
+            showAlert("Başarısız", "Giriş bilgileri hatalı", Alert.AlertType.ERROR);
         }
-
     }
+
+    private void openUserHomePane() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(FXMLPath.USER_HOME));
+            Parent parent = fxmlLoader.load();
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(parent));
+            stage.setTitle("Kullanıcı Paneli");
+            stage.show();
+        } catch (Exception e) {
+            System.out.println(SpecialColor.RED + "Kullanıcı paneline yönlendirme başarısız" + SpecialColor.RESET);
+            e.printStackTrace();
+            showAlert("Hata", "Kullanıcı ekranı yüklenemedi", Alert.AlertType.ERROR);
+        }
+    }
+
+
 
     private void openAdminPane() {
         try {
-            //fxml dosyalarını yükle
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource
-                    ("/com/aysuyigit/yonetim_uygulamasi_javafx/view/admin.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(FXMLPath.ADMIN));
             Parent parent = fxmlLoader.load();
 
-            //Admin sayfasına veri gönderme
-            Stage stage = (Stage)usernameField.getScene().getWindow();
+            Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setScene(new Scene(parent));
-            //Pencere başlığını Admin Panel olarak ayarla
-            stage.setTitle("Admin Panel" +usernameField);
+            stage.setTitle("Admin Panel");
             stage.show();
-
-
         } catch (Exception e) {
             System.out.println(SpecialColor.RED + "Admin Sayfasına yönlendirme başarısız" + SpecialColor.RESET);
             e.printStackTrace();
@@ -94,21 +103,20 @@ public class LoginController {
         }
     }
 
-
-    //Sayfalar arası geçiş(LOGİN-REGİSTER)
     @FXML
     private void switchToRegister(ActionEvent actionEvent) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource
-                    ("/com/aysuyigit/yonetim_uygulamasi_javafx/view/register.fxml"));
+            // 1.YOL
+            /*
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(FXMLPath.REGISTER));
             Parent parent = fxmlLoader.load();
-
             Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
             stage.setScene(new Scene(parent));
             stage.setTitle("Kayıt Ol");
             stage.show();
-
+             */
             // 2.YOL
+            SceneHelper.switchScene(FXMLPath.REGISTER, usernameField, "Kayıt Ol");
         } catch (Exception e) {
             System.out.println(SpecialColor.RED + "Register Sayfasına yönlendirme başarısız" + SpecialColor.RESET);
             e.printStackTrace();

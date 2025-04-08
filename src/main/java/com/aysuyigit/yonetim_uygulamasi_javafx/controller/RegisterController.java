@@ -2,7 +2,10 @@ package com.aysuyigit.yonetim_uygulamasi_javafx.controller;
 
 import com.aysuyigit.yonetim_uygulamasi_javafx.dao.UserDAO;
 import com.aysuyigit.yonetim_uygulamasi_javafx.dto.UserDTO;
+import com.aysuyigit.yonetim_uygulamasi_javafx.utils.ERole;
 import com.aysuyigit.yonetim_uygulamasi_javafx.utils.SpecialColor;
+import com.aysuyigit.yonetim_uygulamasi_javafx.utils.FXMLPath;
+import com.aysuyigit.yonetim_uygulamasi_javafx.utils.SceneHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
+
 
 import java.util.Optional;
 
@@ -21,20 +24,16 @@ public class RegisterController {
     //Injection
     private UserDAO userDAO;
 
-    //Parametresiz construcutor
-    public RegisterController(){
+    public RegisterController() {
         userDAO = new UserDAO();
     }
 
     @FXML
     private TextField usernameField;
-
     @FXML
-    private  TextField passwordField;
-
+    private TextField passwordField;
     @FXML
-    private  TextField emailField;
-
+    private TextField emailField;
 
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
@@ -43,67 +42,71 @@ public class RegisterController {
         alert.showAndWait();
     }
 
-    //Enter tuşuna basıldığında giriş yap
     @FXML
     private void specialOnEnterPressed(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.ENTER) {
-            //Entera basıldığında login sayfasına giriş
             register();
         }
     }
 
-
-    //Register
     @FXML
-    public void register(){
-        //Kullanıcıdan giriş yaparken username,password almak
-        String username,password,email;
-        username = usernameField.getText();
-        password = usernameField.getText();
-        email = emailField.getText();
+    public void register() {
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText().trim();
+        String email = emailField.getText().trim();
 
-        Optional<UserDTO> optionalRegisterUserDTO = Optional.ofNullable(UserDTO.builder()
-                .id(0)
+        if (username.isEmpty() || password.isEmpty() || email.isEmpty()) {
+            showAlert("Hata", "Lütfen tüm alanları doldurun", Alert.AlertType.ERROR);
+            return;
+        }
+
+        // Kullanıcı adı kontrolü
+        if (userDAO.isUsernameExists(username)) {
+            showAlert("Hata", "Bu kullanıcı adı zaten kayıtlı!", Alert.AlertType.WARNING);
+            return;
+        }
+
+        // Email kontrolü
+        if (userDAO.isEmailExists(email)) {
+            showAlert("Hata", "Bu e-posta adresi zaten kayıtlı!", Alert.AlertType.WARNING);
+            return;
+        }
+
+        UserDTO userDTO = UserDTO.builder()
+                .username(username)
                 .password(password)
                 .email(email)
-                .username(username)
-                .build());
+                .role(ERole.USER) // enum olarak
+                .build();
 
-
-        //Eğer veri boş değilse
-        if(optionalRegisterUserDTO.isPresent()){
-            UserDTO userDTO = optionalRegisterUserDTO.get();//veri alındı
-            //Başarılıysa ekranda göster
-            showAlert("Başarılı","Kayıt başarılı",Alert.AlertType.INFORMATION);
-
-            //Kayıt başarılıysa Admin paneline göster
+        Optional<UserDTO> createdUser = userDAO.create(userDTO);
+        if (createdUser.isPresent()) {
+            showAlert("Başarılı", "Kayıt başarılı", Alert.AlertType.INFORMATION);
             switchToLoginPane();
-
-        }else {
-            //Eğer bilgiler yanlışsa
-            showAlert("Başarılı", "Kayıt başarılı", Alert.AlertType.ERROR);
-
+        } else {
+            showAlert("Hata", "Kayıt başarısız oldu", Alert.AlertType.ERROR);
         }
     }
-    //Eğer kayıt işilemi başarılıysa login ekranına gönder
-        @FXML
-        private void switchToLoginPane() {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource
-                        ("/com/aysuyigit/yonetim_uygulamasi_javafx/view/login.fxml"));
-                Parent parent = fxmlLoader.load();
 
-                Stage stage = (Stage) usernameField.getScene().getWindow();
-                stage.setScene(new Scene(parent));
-                stage.setTitle("Giriş Yap");
-                stage.show();
 
-                // 2.YOL
-            } catch (Exception e) {
-                System.out.println(SpecialColor.RED + "Login Sayfasına yönlendirme başarısız" + SpecialColor.RESET);
-                e.printStackTrace();
-                showAlert("Hata", "Login ekranı yüklenemedi", Alert.AlertType.ERROR);
-            }
+    @FXML
+    private void switchToLoginPane() {
+        try {
+            //1.YOL
+            /*
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(FXMLPath.LOGIN));
+            Parent parent = fxmlLoader.load();
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(parent));
+            stage.setTitle("Giriş Yap");
+            stage.show();
+             */
+            //2.YOL
+            SceneHelper.switchScene(FXMLPath.LOGIN, usernameField, "Giriş Yap");
+        } catch (Exception e) {
+            System.out.println(SpecialColor.RED + "Login Sayfasına yönlendirme başarısız" + SpecialColor.RESET);
+            e.printStackTrace();
+            showAlert("Hata", "Login ekranı yüklenemedi", Alert.AlertType.ERROR);
+        }
     }
-    }
-
+}

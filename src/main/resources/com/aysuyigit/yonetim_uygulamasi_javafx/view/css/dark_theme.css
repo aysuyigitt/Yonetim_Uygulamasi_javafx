@@ -1,0 +1,85 @@
+.root {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+}
+
+.label {
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: white;
+    -fx-border-color: #555;
+}
+
+.text-field {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #aaaaaa;
+    -fx-border-color: #555;
+}
+
+.table-view {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: white;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #2b2b2b;
+}
+
+.tab-pane {
+    -fx-background-color: #2b2b2b;
+}
+
+.scroll-pane {
+    -fx-background-color: #2b2b2b;
+}
+
+.tree-view {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: white;
+}
+
+.tree-cell {
+    -fx-text-fill: white;
+}
+
+.text-area {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #aaaaaa;
+    -fx-border-color: #555;
+}
+
+.menu-bar {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+}
+
+.menu-item {
+    -fx-text-fill: white;
+}
+
+.menu-item:hover {
+    -fx-background-color: #555;
+}
+
+.radio-button {
+    -fx-text-fill: white;
+}
+
+.checkbox {
+    -fx-text-fill: white;
+}
+
+.combo-box {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: white;
+    -fx-border-color: #555;
+}
+
+.combo-box-popup {
+    -fx-background-color: #3c3f41;
+}

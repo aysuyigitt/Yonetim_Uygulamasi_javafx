@@ -18,35 +18,31 @@ import java.util.Optional;
 public class UserDAO implements IDaoImplements<UserDTO> {
 
     //Dependency
+
     private Connection connection;
 
-    //Parametresiz Constructor
     public UserDAO() {
         this.connection = SingletonDBConnection.getInstance().getConnection();
     }
 
     @Override
     public Optional<UserDTO> create(UserDTO userDTO) {
-        String hashedPassword = BCrypt.hashpw(userDTO.getPassword(), BCrypt.gensalt());
-        String sql = "INSERT INTO usertable (username, password, email,role) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        String sql = "INSERT INTO usertable (username, password, email, role) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            String hashedPassword = BCrypt.hashpw(userDTO.getPassword(), BCrypt.gensalt());
             preparedStatement.setString(1, userDTO.getUsername());
-            preparedStatement.setString(2, userDTO.getPassword());
+            preparedStatement.setString(2, hashedPassword);
             preparedStatement.setString(3, userDTO.getEmail());
             preparedStatement.setString(4, userDTO.getRole().name());
-
             int affectedRows = preparedStatement.executeUpdate();
 
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        userDTO.setId((generatedKeys.getInt((1))));
+                        userDTO.setId(generatedKeys.getInt(1));
                         userDTO.setPassword(hashedPassword);
                         return Optional.of(userDTO);
                     }
-                } catch (SQLException sqlException) {
-                    sqlException.printStackTrace();
-
                 }
             }
         } catch (Exception exception) {
@@ -58,13 +54,11 @@ public class UserDAO implements IDaoImplements<UserDTO> {
     @Override
     public Optional<List<UserDTO>> list() {
         List<UserDTO> userDTOList = new ArrayList<>();
-        String sql = "SELECT*FROM usertable";
+        String sql = "SELECT * FROM usertable";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = preparedStatement.executeQuery(sql);
-
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 userDTOList.add(mapToObjectDTO(resultSet));
-                        ;
             }
             return userDTOList.isEmpty() ? Optional.empty() : Optional.of(userDTOList);
         } catch (Exception exception) {
@@ -75,38 +69,34 @@ public class UserDAO implements IDaoImplements<UserDTO> {
 
     @Override
     public Optional<UserDTO> findByName(String name) {
-        // String sql = "SELECT*FROM users WHERE username=?";
-        String sql = "SELECT*FROM usertable WHERE email=?";
+        String sql = "SELECT * FROM usertable WHERE email=?";
         return selectSingle(sql, name);
     }
 
     @Override
     public Optional<UserDTO> findById(int id) {
-        String sql = "SELECT*FROM usertable WHERE id=?";
+        String sql = "SELECT * FROM usertable WHERE id=?";
         return selectSingle(sql, id);
     }
 
-
     @Override
     public Optional<UserDTO> update(int id, UserDTO userDTO) {
-        Optional<UserDTO> userDTOUpdate = findById(id);
-        if (userDTOUpdate.isPresent()) {
-            String hashedPassword = BCrypt.hashpw(userDTO.getPassword(), BCrypt.gensalt());
-            String sql = "UPDATE usertable SET username=?, password=?, email=?, role=?  WHERE id=?";
+        Optional<UserDTO> optionalUpdate = findById(id);
+        if (optionalUpdate.isPresent()) {
+            String sql = "UPDATE usertable SET username=?, password=?, email=?, role=? WHERE id=?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                String hashedPassword = BCrypt.hashpw(userDTO.getPassword(), BCrypt.gensalt());
                 preparedStatement.setString(1, userDTO.getUsername());
-                preparedStatement.setString(2, userDTO.getPassword());
+                preparedStatement.setString(2, hashedPassword);
                 preparedStatement.setString(3, userDTO.getEmail());
                 preparedStatement.setString(4, userDTO.getRole().name());
-                preparedStatement.setInt(5, userDTO.getId());
+                preparedStatement.setInt(5, id);
 
                 int affectedRows = preparedStatement.executeUpdate();
-
-                //Eğer güncelleme başarılıysa
                 if (affectedRows > 0) {
                     userDTO.setId(id);
                     userDTO.setPassword(hashedPassword);
-                    return Optional.of((userDTO));
+                    return Optional.of(userDTO);
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -117,17 +107,14 @@ public class UserDAO implements IDaoImplements<UserDTO> {
 
     @Override
     public Optional<UserDTO> delete(int id) {
-        Optional<UserDTO> userDTODelete = findById(id);
-        if (userDTODelete.isPresent()) {
+        Optional<UserDTO> optionalDelete = findById(id);
+        if (optionalDelete.isPresent()) {
             String sql = "DELETE FROM usertable WHERE id=?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, id);
-
                 int affectedRows = preparedStatement.executeUpdate();
-
-                //Eğer güncelleme başarılıysa
                 if (affectedRows > 0) {
-                    return userDTODelete;
+                    return optionalDelete;
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -150,34 +137,34 @@ public class UserDAO implements IDaoImplements<UserDTO> {
     @Override
     public Optional<UserDTO> selectSingle(String sql, Object... params) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-        for(int i=0; i< params.length;i++) {
-            preparedStatement.setObject((i + 1), params[i]);
-        }
-         try(ResultSet resultSet = preparedStatement.executeQuery()){
-             if(resultSet.next()){
-                 return Optional.of(mapToObjectDTO(resultSet));
-             }
-         }
-        }catch(Exception exception){
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject((i + 1), params[i]);
+            }
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(mapToObjectDTO(resultSet));
+                }
+            }
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
         return Optional.empty();
     }
 
     @Override
-    public Optional loginUser(String username, String password) {
-        String sql = "SELECT*FROM usertable WHERE username=?, AND password=?";
-        Optional<UserDTO> userOptional = selectSingle(sql,username,password);
-        if(userOptional.isPresent()){
-            UserDTO userDTO = userOptional.get();
-            if(BCrypt.checkpw(password,userDTO.getPassword())){
-                return Optional.of((userDTO));
+    public Optional<UserDTO> loginUser(String usernameOrEmail, String password) {
+        String sql = "SELECT * FROM usertable WHERE username = ? OR email = ?";
+        Optional<UserDTO> userOpt = selectSingle(sql, usernameOrEmail, usernameOrEmail);
+
+        if (userOpt.isPresent()) {
+            UserDTO user = userOpt.get();
+            if (BCrypt.checkpw(password, user.getPassword())) {
+                return Optional.of(user);
             }
         }
-         return Optional.empty();
-
+        return Optional.empty();
     }
-    //Databse username var mı?
+
     public boolean isUsernameExists(String username) {
         String sql = "SELECT 1 FROM usertable WHERE username = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -189,6 +176,7 @@ public class UserDAO implements IDaoImplements<UserDTO> {
             return true; // hata varsa güvenlik için false yerine true döneriz
         }
     }
+
     public boolean isEmailExists(String email) {
         String sql = "SELECT 1 FROM usertable WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -200,5 +188,6 @@ public class UserDAO implements IDaoImplements<UserDTO> {
             return true; // hata varsa true dön ki işlem durdurulsun
         }
     }
+
 
 }
