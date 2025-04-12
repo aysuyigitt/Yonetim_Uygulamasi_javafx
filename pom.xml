@@ -60,7 +60,12 @@
             <version>2.0.29</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version> <!-- En güncel versiyonu kullandığınızdan emin olun -->
+            <scope>provided</scope>
+        </dependency>
 
         <!--EXCEL-->
         <dependency>
@@ -68,6 +73,8 @@
             <artifactId>poi-ooxml</artifactId>
             <version>5.2.3</version>
         </dependency>
+
+
 
         <!-- Hashing Password-->
         <dependency>

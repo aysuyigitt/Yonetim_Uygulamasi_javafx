@@ -11,6 +11,8 @@ import java.util.Locale;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,6 +29,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -37,21 +40,31 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
+import org.h2.engine.User;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+
 import java.util.ResourceBundle;
 
 
@@ -70,6 +83,10 @@ public class AdminController {
 
     @FXML
     private Button themeToggleButton;
+
+    @FXML
+    private TextArea noteContent;
+
     @FXML
     private Button logoutButton;
 
@@ -85,6 +102,7 @@ public class AdminController {
     private Button statementsButton;
     @FXML
     private Button backupButton;
+
     @FXML
     private Button restoreButton;
     // User İçin
@@ -174,7 +192,11 @@ public class AdminController {
 
 
 
+    public static UserDTO currentUser;
 
+    public void setCurrentUser(UserDTO userDTO) {
+        this.currentUser = userDTO;
+    }
 
     @FXML
     public void initialize() {
@@ -269,7 +291,7 @@ public class AdminController {
     @FXML
     public void openKdvPane() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/hamitmizrak/ibb_ecodation_javafx/view/kdv.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/aysuyigit/yonetim_uygulamasi_javafx/view/kdv.fxml"));
             Parent kdvRoot = loader.load();
             Stage stage = new Stage();
             stage.setTitle("KDV Paneli");
@@ -1176,42 +1198,118 @@ public class AdminController {
         searchField.setText(bundle.getString("searchFile"));*/
 
 
-
-        /*roleColumn.setText(bundle.getString("updateUser"));
-        amountColumn.setText(bundle.getString("userDelete"));
-        receiptColumn.setText(bundle.getString("addKdv"));
-        kdvAmountColumn.setText(bundle.getString("updateKdv"));
-        totalAmountColumn.setText(bundle.getString("deleteKdv"));
-        receiptColumn.setText(bundle.getString("receiptColumn"));
-        dateColumn.setText(bundle.getString("receiptColumn"));*/
-
     }
 
 
     @FXML
     private void showNotifications(ActionEvent event) {
-        // Bildirimleri gösteren popup veya panel açılacak
+        Stage popupStage = new Stage(); //Yeni bir pencere (popup) açar:
+        popupStage.setTitle("Bildirimler");
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.setAlwaysOnTop(true);
+
+        VBox notificationsBox = new VBox(10); //Bildirimleri tutacak bir kutu (VBox) oluşturur
+        notificationsBox.setPadding(new Insets(15));
+        notificationsBox.setStyle("-fx-background-color: #f9f9f9;");
+
+        // Örnek bildirim verisi (gerçek projede bir liste üzerinden çekebilirsin)
+        List<String> messages = List.of(
+                "[BAŞARI] Giriş başarılı.",
+                "[BAŞARI] Tablo başarılıyla yüklendi.",
+                "[BAŞARI] Kayıt başarılı.",
+                "[UYARI] Lütfen tüm alanları doldurun.",
+                "[UYARI] Oturumdan çıkmak isityor musunuz?",
+                "[HATA] Giriş bilgileri hatalı."
+        );
+
+        for (String msg : messages) {
+            Label label = new Label(msg); //Her mesaj için bir Label oluşturur ve stile göre renklendirir:
+            label.setWrapText(true);
+            label.setPadding(new Insets(10));
+            label.setMaxWidth(350);
+
+            // Renk ayarı
+            if (msg.contains("BAŞARI")) {
+                label.setStyle("-fx-background-color: #d4edda; -fx-text-fill: #155724; -fx-background-radius: 5;");
+            } else if (msg.contains("UYARI")) {
+                label.setStyle("-fx-background-color: #fff3cd; -fx-text-fill: #856404; -fx-background-radius: 5;");
+            } else if (msg.contains("HATA")) {
+                label.setStyle("-fx-background-color: #f8d7da; -fx-text-fill: #721c24; -fx-background-radius: 5;");
+            } else {
+                label.setStyle("-fx-background-color: #e2e3e5; -fx-text-fill: #383d41; -fx-background-radius: 5;");
+            }
+
+            notificationsBox.getChildren().add(label);
+        }
+
+        ScrollPane scrollPane = new ScrollPane(notificationsBox);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPadding(new Insets(10));
+
+        Scene scene = new Scene(scrollPane, 400, 300); //Popup sahnesi hazırlanır ve ekranda gösterilir:
+        popupStage.setScene(scene);
+        popupStage.show();
+
+    }
+    @FXML
+    private void notebook(ActionEvent event) {
+        try {
+            // Load the notebook FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/aysuyigit/yonetim_uygulamasi_javafx/view/notebook.fxml"));
+            Parent root = loader.load();
+
+            // Create a new scene with the loaded notebook FXML
+            Scene notebookScene = new Scene(root);
+
+            // Get the current stage (window) and set the new scene
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(notebookScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void showProfile(ActionEvent event) {
-        // Kullanıcı profil bilgileri gösterilecek pencere
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/aysuyigit/yonetim_uygulamasi_javafx/view/profile.fxml"));
+            Parent root = loader.load();
+            ProfileController profileController = loader.getController();
+            profileController.setUser(currentUser);
+
+            if (currentUser != null) {
+                System.out.println("Current user is: " + currentUser.getUsername());  // Burada kullanıcının adını kontrol et
+
+            } else {
+                // Eğer currentUser null ise, bir hata mesajı göster
+                System.out.println("Kullanıcı bilgileri bulunamadı.");
+            }
+
+            Stage stage = new Stage();
+            stage.setTitle("Profil");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+
+
+
+    // Kullanıcı profil bilgileri gösterilecek pencere
     @FXML
     private void backupData(ActionEvent event) {
         // Veritabanı yedekleme işlemleri burada yapılacak
-    }
 
-    @FXML
+    }
+    /*@FXML
     private void restoreData(ActionEvent event) {
         // Daha önce alınmış bir yedek dosyadan veri geri yüklenecek
+    }*/
     }
 
 
-    @FXML
-    private void notebook(ActionEvent event) {
-        // Daha önce alınmış bir yedek dosyadan veri geri yüklenecek
-    }
 
-}
+

@@ -18,6 +18,7 @@ module com.aysuyigit.yonetim_uygulamasi_javafx {
     requires java.mail;
 
 
+
     // UI geliştirme için kullanılan harici kütüphaneler
     // ControlsFX, gelişmiş UI bileşenlerini (örn: Notifikasyonlar, Doğrulama Alanları) sağlar.
     requires org.controlsfx.controls;

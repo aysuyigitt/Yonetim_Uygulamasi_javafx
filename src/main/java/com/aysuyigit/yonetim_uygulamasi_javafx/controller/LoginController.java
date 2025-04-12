@@ -21,6 +21,7 @@ import java.util.Optional;
 
 public class LoginController {
     private UserDAO userDAO;
+    private UserDTO currentUser;  // Kullanıcıyı buraya saklıyoruz
 
     public LoginController() {
         userDAO = new UserDAO();
@@ -31,6 +32,7 @@ public class LoginController {
     @FXML
     private TextField passwordField;
 
+    // Alert metodu
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
@@ -38,33 +40,24 @@ public class LoginController {
         alert.showAndWait();
     }
 
-    @FXML
-    private void specialOnEnterPressed(KeyEvent keyEvent) {
-        if (keyEvent.getCode() == KeyCode.ENTER) {
-            login();
-        }
-    }
-
+    // Giriş yapma metodu
     @FXML
     public void login() {
-
-        //
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
 
         Optional<UserDTO> optionalLoginUserDTO = userDAO.loginUser(username, password);
 
         if (optionalLoginUserDTO.isPresent()) {
-            UserDTO userDTO = optionalLoginUserDTO.get();
-            showAlert("Başarılı", "Giriş Başarılı: " + userDTO.getUsername(), Alert.AlertType.INFORMATION);
+            currentUser = optionalLoginUserDTO.get();  // Giriş yapan kullanıcıyı sakla
+            showAlert("Başarılı", "Giriş Başarılı: " + currentUser.getUsername(), Alert.AlertType.INFORMATION);
 
-            if (userDTO.getRole() == ERole.ADMIN) {
+            // Kullanıcıya göre yönlendirme
+            if (currentUser.getRole() == ERole.ADMIN) {
                 openAdminPane();
             } else {
                 openUserHomePane();
             }
-
-
         } else {
             showAlert("Başarısız", "Giriş bilgileri hatalı", Alert.AlertType.ERROR);
         }
@@ -74,6 +67,9 @@ public class LoginController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(FXMLPath.USER_HOME));
             Parent parent = fxmlLoader.load();
+            AdminController adminController = fxmlLoader.getController();
+            adminController.setCurrentUser(currentUser); // 🟢 Aktar
+
             Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setScene(new Scene(parent));
             stage.setTitle("Kullanıcı Paneli");
@@ -85,13 +81,10 @@ public class LoginController {
         }
     }
 
-
-
     private void openAdminPane() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(FXMLPath.ADMIN));
             Parent parent = fxmlLoader.load();
-
             Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setScene(new Scene(parent));
             stage.setTitle("Admin Panel");
@@ -103,19 +96,10 @@ public class LoginController {
         }
     }
 
+    // Register ekranına geçiş
     @FXML
     private void switchToRegister(ActionEvent actionEvent) {
         try {
-            // 1.YOL
-            /*
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(FXMLPath.REGISTER));
-            Parent parent = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(parent));
-            stage.setTitle("Kayıt Ol");
-            stage.show();
-             */
-            // 2.YOL
             SceneHelper.switchScene(FXMLPath.REGISTER, usernameField, "Kayıt Ol");
         } catch (Exception e) {
             System.out.println(SpecialColor.RED + "Register Sayfasına yönlendirme başarısız" + SpecialColor.RESET);
@@ -123,4 +107,6 @@ public class LoginController {
             showAlert("Hata", "Kayıt ekranı yüklenemedi", Alert.AlertType.ERROR);
         }
     }
+
+
 }
