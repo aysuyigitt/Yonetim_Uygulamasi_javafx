@@ -33,7 +33,7 @@ public class NoteBookController {
         this.noteBookDAO = new NoteBookDAO();
     }
 
-    // ✅ Yeni not defteri oluştur
+    //  Yeni not defteri oluştur
     @FXML
     public void handleAddNote() {
         String title = titleField.getText();
@@ -56,7 +56,7 @@ public class NoteBookController {
     }
 
     @FXML
-    // ✅ Not ekleme işlemi
+    //  Not ekleme işlemi
     public boolean createNote(NoteBookDTO noteBookDTO) {
         Optional<NoteBookDTO> createdNote = noteBookDAO.create(noteBookDTO);
         if (createdNote.isPresent()) {
@@ -67,7 +67,7 @@ public class NoteBookController {
         }
     }
 
-    // ✅ Not güncelle
+    //  Not güncelle
     @FXML
     public void handleUpdateNote() {
         NoteBookDTO selectedNote = noteListView.getSelectionModel().getSelectedItem();
@@ -83,7 +83,7 @@ public class NoteBookController {
         }
     }
 
-    // ✅ Not güncelleme işlemi
+    //  Not güncelleme işlemi
     public boolean updateNote(int id, NoteBookDTO updatedNote) {
         Optional<NoteBookDTO> updated = noteBookDAO.update(id, updatedNote);
         if (updated.isPresent()) {
@@ -94,7 +94,7 @@ public class NoteBookController {
         }
     }
 
-    // ✅ Not sil
+    //  Not sil
     @FXML
     public void handleDeleteNote() {
         NoteBookDTO selectedNote = noteListView.getSelectionModel().getSelectedItem();
@@ -108,7 +108,7 @@ public class NoteBookController {
         }
     }
 
-    // ✅ Not silme işlemi
+    //  Not silme işlemi
     public boolean deleteNote(int id) {
         Optional<NoteBookDTO> deleted = noteBookDAO.delete(id);
         if (deleted.isPresent()) {
@@ -119,21 +119,21 @@ public class NoteBookController {
         }
     }
 
-    // ✅ Kullanıcıya notları yükle
+    //  Kullanıcıya notları yükle
     private void loadNotes() {
         Optional<List<NoteBookDTO>> notes = noteBookDAO.listByUserId(1);  // Örneğin kullanıcı ID'si 1
         noteListView.getItems().clear();
         //noteListView.getItems().addAll(notes);
     }
 
-    // ✅ Alanları temizle
+    //  Alanları temizle
     private void clearFields() {
         titleField.clear();
         contentArea.clear();
         noteListView.getSelectionModel().clearSelection();
     }
 
-    // ✅ Uyarı mesajı göster
+    //  Uyarı mesajı göster
     private void showAlert(AlertType type, String message) {
         Alert alert = new Alert(type);
         alert.setTitle("Uyarı");

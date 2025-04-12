@@ -1282,7 +1282,7 @@ public class AdminController {
                 System.out.println("Current user is: " + currentUser.getUsername());  // Burada kullanıcının adını kontrol et
 
             } else {
-                // Eğer currentUser null ise, bir hata mesajı göster
+
                 System.out.println("Kullanıcı bilgileri bulunamadı.");
             }
 
