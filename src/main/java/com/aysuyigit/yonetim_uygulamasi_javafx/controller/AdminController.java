@@ -1317,6 +1317,15 @@ public class AdminController {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void backupData(ActionEvent event) {
+        // Veritabanı yedekleme işlemleri burada yapılacak
+    }
+
+    @FXML
+    private void restoreData(ActionEvent event) {
+        // Daha önce alınmış bir yedek dosyadan veri geri yüklenecek
+    }
 
 }
 

@@ -27,13 +27,15 @@ public class UserDAO implements IDaoImplements<UserDTO> {
 
     @Override
     public Optional<UserDTO> create(UserDTO userDTO) {
-        String sql = "INSERT INTO usertable (username, password, email, role) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO usertable (username, password, email, role) VALUES (?, ?, ?, ?)"; //Bu satırda, kullanıcı bilgilerini (username, password, email, role) veritabanındaki usertable adlı tabloya eklemek için SQL sorgusu hazırlanır.
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             String hashedPassword = BCrypt.hashpw(userDTO.getPassword(), BCrypt.gensalt());
+           //Bu satırlarda, SQL sorgusundaki yer tutucular (?) sırasıyla kullanıcının username, hashedPassword, email, ve role bilgileri ile doldurulur.
             preparedStatement.setString(1, userDTO.getUsername());
             preparedStatement.setString(2, hashedPassword);
             preparedStatement.setString(3, userDTO.getEmail());
             preparedStatement.setString(4, userDTO.getRole().name());
+            //executeUpdate() metodu, INSERT sorgusunu çalıştırarak veritabanına veri ekler. affectedRows değişkeni, kaç satırın etkilendiğini (eklenen satır sayısını) döndürür.
             int affectedRows = preparedStatement.executeUpdate();
 
             if (affectedRows > 0) {
@@ -53,14 +55,16 @@ public class UserDAO implements IDaoImplements<UserDTO> {
 
     @Override
     public Optional<List<UserDTO>> list() {
+        //İlk olarak, veritabanından alınacak kullanıcıları saklayacak bir List (userDTOList) oluşturulur. Bu liste, veritabanından alınan tüm kullanıcı verilerini içerecek.
         List<UserDTO> userDTOList = new ArrayList<>();
         String sql = "SELECT * FROM usertable";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();//executeQuery() metodu, sorguyu çalıştırır ve sorgunun sonucunu bir ResultSet (sonuç kümesi) olarak döndürür. Bu, veritabanından gelen kullanıcı verilerini içerir.
+           //resultSet.next() her seferinde bir kullanıcıyı alır. Bu döngü, tüm kullanıcıları tek tek alıp, mapToObjectDTO(resultSet) metoduyla UserDTO nesnelerine dönüştürür ve userDTOList listesine ekler
             while (resultSet.next()) {
                 userDTOList.add(mapToObjectDTO(resultSet));
             }
-            return userDTOList.isEmpty() ? Optional.empty() : Optional.of(userDTOList);
+           return userDTOList.isEmpty() ? Optional.empty() : Optional.of(userDTOList);//Eğer userDTOList listesi boş değilse, Optional.of(userDTOList) ile bu liste döndürülür. Eğer liste boşsa, Optional.empty() döndürülür. Burada Optional, dönen değerin null olmasının önüne geçmek için kullanılır.
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -107,14 +111,14 @@ public class UserDAO implements IDaoImplements<UserDTO> {
 
     @Override
     public Optional<UserDTO> delete(int id) {
-        Optional<UserDTO> optionalDelete = findById(id);
+        Optional<UserDTO> optionalDelete = findById(id);//İlk olarak, id ile veritabanında bir kullanıcı aranır. findById(id) metodu, kullanıcıyı bulup bulmadığını kontrol etmek için Optional döndürür.
         if (optionalDelete.isPresent()) {
             String sql = "DELETE FROM usertable WHERE id=?";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) { //PreparedStatement, SQL sorgusunun içine kullanıcı id'sini yerleştirir. Bu, hangi kullanıcıyı sileceğimizi belirtir.
                 preparedStatement.setInt(1, id);
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows > 0) {
-                    return optionalDelete;
+                    return optionalDelete; //silinen kullanıcıyı döndürür.
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -154,9 +158,9 @@ public class UserDAO implements IDaoImplements<UserDTO> {
     @Override
     public Optional<UserDTO> loginUser(String usernameOrEmail, String password) {
         String sql = "SELECT * FROM usertable WHERE username = ? OR email = ?";
-        Optional<UserDTO> userOpt = selectSingle(sql, usernameOrEmail, usernameOrEmail);
+        Optional<UserDTO> userOpt = selectSingle(sql, usernameOrEmail, usernameOrEmail); //userOpt → Veritabanından username ya da email ile aranan kullanıcı.
 
-        if (userOpt.isPresent()) {
+        if (userOpt.isPresent()) { //Eğer kullanıcı bulunursa (isPresent()), get() ile kullanıcı nesnesine (UserDTO) erişilir.
             UserDTO user = userOpt.get();
             if (BCrypt.checkpw(password, user.getPassword())) {
                 return Optional.of(user);
