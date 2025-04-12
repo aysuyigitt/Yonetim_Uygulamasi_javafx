@@ -92,10 +92,12 @@ public class AdminController {
     @FXML
     private Button logoutButton;
 
-    @FXML private Button profilButton;
+    @FXML
+    private Button profilButton;
 
     private boolean isEnglish = true;
-    @FXML private ComboBox<String> languageComboBox;
+    @FXML
+    private ComboBox<String> languageComboBox;
     @FXML
     private Label greetingLabel;
     @FXML
@@ -150,50 +152,75 @@ public class AdminController {
     private TextField searchKdvField;
 
 
-    @FXML private Button btnAddColumn;
-    @FXML private Button btnUpdateColumn;
-    @FXML private Button btnDeleteColumn;
-    @FXML private Button btnPrintColumn;
-    @FXML private Label panelTitleLabel;
+    @FXML
+    private Button btnAddColumn;
+    @FXML
+    private Button btnUpdateColumn;
+    @FXML
+    private Button btnDeleteColumn;
+    @FXML
+    private Button btnPrintColumn;
+    @FXML
+    private Label panelTitleLabel;
 
-    @FXML private Label clockLabel;
-    @FXML private Label userManagementLabel;
-    @FXML private Label vatCalculationLabel;
+    @FXML
+    private Label clockLabel;
+    @FXML
+    private Label userManagementLabel;
+    @FXML
+    private Label vatCalculationLabel;
 
-    @FXML private Button addKdvButton;
-    @FXML private Button updateKdvButton;
-    @FXML private Button deleteKdvButton;
+    @FXML
+    private Button addKdvButton;
+    @FXML
+    private Button updateKdvButton;
+    @FXML
+    private Button deleteKdvButton;
 
-    @FXML private Button btnKdvExportTxt;
-    @FXML private Button btnKdvExportPdf;
-    @FXML private Button btnKdvExportExcel;
+    @FXML
+    private Button btnKdvExportTxt;
+    @FXML
+    private Button btnKdvExportPdf;
+    @FXML
+    private Button btnKdvExportExcel;
 
-    @FXML private Button btnKdvPrint;
-    @FXML private Button btnKdvMail;
+    @FXML
+    private Button btnKdvPrint;
+    @FXML
+    private Button btnKdvMail;
 
-    @FXML private Button notebookButton;
-
-
-
-
-
-    @FXML private Menu fileMenu;
-    @FXML private Menu userMenu;
-    @FXML private Menu kdvMenu;
-    @FXML private Menu transactionsMenu;
-    @FXML private Menu helpMenu;
-    @FXML private MenuItem addUserMenuItem;
-    @FXML private MenuItem updateUserMenuItem;
-    @FXML private MenuItem deleteUserMenuItem;
-    @FXML private MenuItem addKdvMenuItem;
-    @FXML private MenuItem updateKdvMenuItem;
-    @FXML private MenuItem deleteKdvMenuItem;
-    @FXML private MenuItem openCalculatorMenuItem;
-    @FXML private MenuItem notebookMenuItem;
-    @FXML private MenuItem showAboutMenuItem;
+    @FXML
+    private Button notebookButton;
 
 
-
+    @FXML
+    private Menu fileMenu;
+    @FXML
+    private Menu userMenu;
+    @FXML
+    private Menu kdvMenu;
+    @FXML
+    private Menu transactionsMenu;
+    @FXML
+    private Menu helpMenu;
+    @FXML
+    private MenuItem addUserMenuItem;
+    @FXML
+    private MenuItem updateUserMenuItem;
+    @FXML
+    private MenuItem deleteUserMenuItem;
+    @FXML
+    private MenuItem addKdvMenuItem;
+    @FXML
+    private MenuItem updateKdvMenuItem;
+    @FXML
+    private MenuItem deleteKdvMenuItem;
+    @FXML
+    private MenuItem openCalculatorMenuItem;
+    @FXML
+    private MenuItem notebookMenuItem;
+    @FXML
+    private MenuItem showAboutMenuItem;
 
 
     @FXML
@@ -1120,18 +1147,18 @@ public class AdminController {
     @FXML
     private void toggleTheme(ActionEvent event) {
         Scene scene = themeToggleButton.getScene();
-
+        // Tema durumunu değiştir
         if (isDark) {
             scene.getStylesheets().clear();
             scene.getStylesheets().add(getClass().getResource("/com/aysuyigit/yonetim_uygulamasi_javafx/view/css/light_theme.css").toExternalForm());
         } else {
             scene.getStylesheets().clear();
             scene.getStylesheets().add(getClass().getResource("/com/aysuyigit/yonetim_uygulamasi_javafx/view/css/dark_theme.css").toExternalForm());
-            // Tema durumunu değiştir
+
         }
         isDark = !isDark;
 
-        }
+    }
 
     @FXML
     private void languageTheme() {
@@ -1192,12 +1219,8 @@ public class AdminController {
         profilButton.setText(bundle.getString("showProfile"));
         notebookButton.setText(bundle.getString("notebook"));
         themeToggleButton.setText(bundle.getString("toggleTheme"));
-        /*searchKdvField.setText(bundle.getString("searchKdv"));
-        searchField.setText(bundle.getString("searchFile"));*/
-
 
     }
-
 
     @FXML
     private void showNotifications(ActionEvent event) {
@@ -1206,11 +1229,11 @@ public class AdminController {
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setAlwaysOnTop(true);
 
-        VBox notificationsBox = new VBox(10); //Bildirimleri tutacak bir kutu (VBox) oluşturur
+        VBox notificationsBox = new VBox(10);
         notificationsBox.setPadding(new Insets(15));
         notificationsBox.setStyle("-fx-background-color: #f9f9f9;");
 
-        // Örnek bildirim verisi (gerçek projede bir liste üzerinden çekebilirsin)
+
         List<String> messages = List.of(
                 "[BAŞARI] Giriş başarılı.",
                 "[BAŞARI] Tablo başarılıyla yüklendi.",
@@ -1249,17 +1272,14 @@ public class AdminController {
         popupStage.show();
 
     }
+
     @FXML
     private void notebook(ActionEvent event) {
         try {
-            // Load the notebook FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/aysuyigit/yonetim_uygulamasi_javafx/view/notebook.fxml"));
             Parent root = loader.load();
-
-            // Create a new scene with the loaded notebook FXML
             Scene notebookScene = new Scene(root);
 
-            // Get the current stage (window) and set the new scene
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(notebookScene);
             stage.show();
@@ -1298,20 +1318,7 @@ public class AdminController {
         }
     }
 
-
-
-
-    // Kullanıcı profil bilgileri gösterilecek pencere
-    @FXML
-    private void backupData(ActionEvent event) {
-        // Veritabanı yedekleme işlemleri burada yapılacak
-
-    }
-    /*@FXML
-    private void restoreData(ActionEvent event) {
-        // Daha önce alınmış bir yedek dosyadan veri geri yüklenecek
-    }*/
-    }
+}
 
 
 
