@@ -2,10 +2,7 @@ package com.aysuyigit.yonetim_uygulamasi_javafx.controller;
 
 import com.aysuyigit.yonetim_uygulamasi_javafx.dao.UserDAO;
 import com.aysuyigit.yonetim_uygulamasi_javafx.dto.UserDTO;
-import com.aysuyigit.yonetim_uygulamasi_javafx.utils.ERole;
-import com.aysuyigit.yonetim_uygulamasi_javafx.utils.FXMLPath;
-import com.aysuyigit.yonetim_uygulamasi_javafx.utils.SceneHelper;
-import com.aysuyigit.yonetim_uygulamasi_javafx.utils.SpecialColor;
+import com.aysuyigit.yonetim_uygulamasi_javafx.utils.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,7 +47,9 @@ public class LoginController {
 
         if (optionalLoginUserDTO.isPresent()) {
             currentUser = optionalLoginUserDTO.get();  // Giriş yapan kullanıcıyı sakla
+            SessionManager.setCurrentUser(currentUser);
             showAlert("Başarılı", "Giriş Başarılı: " + currentUser.getUsername(), Alert.AlertType.INFORMATION);
+
 
             // Kullanıcıya göre yönlendirme
             if (currentUser.getRole() == ERole.ADMIN) {
@@ -68,7 +67,7 @@ public class LoginController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(FXMLPath.USER_HOME));
             Parent parent = fxmlLoader.load();
             AdminController adminController = fxmlLoader.getController();
-            adminController.setCurrentUser(currentUser); // 🟢 Aktar
+            SessionManager.setCurrentUser(currentUser);
 
             Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setScene(new Scene(parent));
@@ -95,6 +94,8 @@ public class LoginController {
             showAlert("Hata", "Admin ekranı yüklenemedi", Alert.AlertType.ERROR);
         }
     }
+
+
 
     // Register ekranına geçiş
     @FXML

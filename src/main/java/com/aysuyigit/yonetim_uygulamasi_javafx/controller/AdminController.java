@@ -6,12 +6,14 @@ import com.aysuyigit.yonetim_uygulamasi_javafx.dto.KdvDTO;
 import com.aysuyigit.yonetim_uygulamasi_javafx.dto.UserDTO;
 import com.aysuyigit.yonetim_uygulamasi_javafx.utils.ERole;
 import com.aysuyigit.yonetim_uygulamasi_javafx.utils.FXMLPath;
+import com.aysuyigit.yonetim_uygulamasi_javafx.utils.SessionManager;
 import javafx.animation.Animation;
 import java.util.Locale;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -192,11 +194,7 @@ public class AdminController {
 
 
 
-    public static UserDTO currentUser;
 
-    public void setCurrentUser(UserDTO userDTO) {
-        this.currentUser = userDTO;
-    }
 
     @FXML
     public void initialize() {
@@ -1271,25 +1269,30 @@ public class AdminController {
     }
 
     @FXML
-    private void showProfile(ActionEvent event) {
+    private void showProfile() {
         try {
+            // Profil ekranını yükle
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/aysuyigit/yonetim_uygulamasi_javafx/view/profile.fxml"));
             Parent root = loader.load();
-            ProfileController profileController = loader.getController();
-            profileController.setUser(currentUser);
 
+            // SessionManager'dan mevcut kullanıcıyı al
+            ProfileController controller = loader.getController();
+            UserDTO currentUser = SessionManager.getCurrentUser();
+
+            // Kullanıcı bilgilerini kontrol et
             if (currentUser != null) {
-                System.out.println("Current user is: " + currentUser.getUsername());  // Burada kullanıcının adını kontrol et
-
+                controller.setUser(currentUser);
             } else {
-
                 System.out.println("Kullanıcı bilgileri bulunamadı.");
+                // Kullanıcı bilgileri null ise, burada hata mesajı gösterebilirsiniz;
             }
 
+            // Profil bilgileri ekranına geçiş yap
             Stage stage = new Stage();
             stage.setTitle("Profil");
             stage.setScene(new Scene(root));
             stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
