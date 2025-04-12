@@ -1154,10 +1154,8 @@ public class AdminController {
         } else {
             scene.getStylesheets().clear();
             scene.getStylesheets().add(getClass().getResource("/com/aysuyigit/yonetim_uygulamasi_javafx/view/css/dark_theme.css").toExternalForm());
-
         }
         isDark = !isDark;
-
     }
 
     @FXML
@@ -1168,7 +1166,7 @@ public class AdminController {
             bundle = ResourceBundle.getBundle("MessagesBundle", new Locale("en"));
         }
         isEnglish = !isEnglish;
-        updateTexts(); // ⚠️ Burası eksikti!
+        updateTexts(); //  Burası eksikti!
     }
 
     private void updateTexts() {
